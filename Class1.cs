@@ -22,7 +22,7 @@ namespace StrongerYou
             {
                 helper.Events.GameLoop.DayEnding += GameLoopOnDayEnding;
                 helper.Events.GameLoop.DayStarted += GameLoopOnDayStarted;   
-                Monitor.Log("Enabled with a Multiplier of " + Config.Multiplier, LogLevel.Info);
+                Monitor.Log("Up and Running", LogLevel.Info);
             }
             else
             {
@@ -49,10 +49,14 @@ namespace StrongerYou
             int FishingLevel = Game1.player.FishingLevel;
             int CombatLevel = Game1.player.CombatLevel;
 
-            int Bonus = ((FarmingLevel + MiningLevel + ForagingLevel + FishingLevel + CombatLevel) * Config.Multiplier) + Config.BaseExtra;
+            int Bonus = FarmingLevel + MiningLevel + ForagingLevel + FishingLevel + CombatLevel;
             
-            HealthOffset = EnergyOffset = Bonus;
-            Monitor.Log("Bonus Offset is " + Bonus, LogLevel.Info);
+            //HealthOffset = EnergyOffset = Bonus;
+
+            HealthOffset = (Bonus * Config.HealthMultiplier) + Config.BaseExtraHealth;
+            EnergyOffset = (Bonus * Config.EnergyMultiplier) + Config.BaseExtraEnergy;
+
+            Monitor.Log("Base Bonus before Multipliers and Extras: " + Bonus, LogLevel.Info);
         }
         
         private void GameLoopOnDayStarted(object sender, DayStartedEventArgs e)
@@ -88,7 +92,9 @@ namespace StrongerYou
     class ModConfig
     {
         public bool Enabled = true;
-        public int Multiplier = 2;
-        public int BaseExtra = 0;
+        public int HealthMultiplier = 2;
+        public int EnergyMultiplier = 2;
+        public int BaseExtraHealth = 0;
+        public int BaseExtraEnergy = 0;
     }
 }
