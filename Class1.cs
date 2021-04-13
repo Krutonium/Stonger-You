@@ -30,8 +30,8 @@ namespace StrongerYou
             }
         }
 
-        static int HealthOffset = 50; 
-        static int EnergyOffset = 50;
+        static float HealthOffset = 0; 
+        static float EnergyOffset = 0;
         
         private void CalculateOffsets()
         {
@@ -69,10 +69,10 @@ namespace StrongerYou
             //Add Health and Energy
             Monitor.Log("Current Health is " + Game1.player.maxHealth, LogLevel.Info);
             Monitor.Log("Current Energy is "+ Game1.player.maxStamina, LogLevel.Info);
-            Game1.player.maxHealth += HealthOffset;
-            Game1.player.health += HealthOffset;
-            Game1.player.MaxStamina += EnergyOffset;
-            Game1.player.stamina += EnergyOffset;
+            Game1.player.maxHealth += (int)Math.Round(HealthOffset);
+            Game1.player.health += (int)Math.Round(HealthOffset);
+            Game1.player.MaxStamina += (int)Math.Round(EnergyOffset);
+            Game1.player.stamina += (int)Math.Round(EnergyOffset);
             Monitor.Log("Added Bonus Health and Energy based on Levels.", LogLevel.Info);
         }
 
@@ -84,16 +84,16 @@ namespace StrongerYou
             }
             //Remove Health and Energy
             Monitor.Log("Removing Bonus Health and Energy Prior to Save...", LogLevel.Info);
-            Game1.player.maxHealth -= HealthOffset;
-            Game1.player.MaxStamina -= EnergyOffset;
+            Game1.player.maxHealth -= (int)Math.Round(HealthOffset);
+            Game1.player.MaxStamina -= (int)Math.Round(EnergyOffset);
         }
     }
 
     class ModConfig
     {
         public bool Enabled = true;
-        public int HealthMultiplier = 2;
-        public int EnergyMultiplier = 2;
+        public float HealthMultiplier = 2.0f;
+        public float EnergyMultiplier = 2.0f;
         public int BaseExtraHealth = 0;
         public int BaseExtraEnergy = 0;
     }
