@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Buffs;
 using StardewValley.Menus;
 
 namespace StrongerYou
@@ -58,21 +59,31 @@ namespace StrongerYou
 
             Monitor.Log("Base Bonus before Multipliers and Extras: " + Bonus, LogLevel.Info);
         }
-        
+
         private void GameLoopOnDayStarted(object sender, DayStartedEventArgs e)
         {
             if (!Context.IsWorldReady)
             {
                 return;
             }
+
             CalculateOffsets();
             //Add Health and Energy
             Monitor.Log("Current Health is " + Game1.player.maxHealth, LogLevel.Info);
-            Monitor.Log("Current Energy is "+ Game1.player.maxStamina, LogLevel.Info);
+            Monitor.Log("Current Energy is " + Game1.player.MaxStamina, LogLevel.Info);
             Game1.player.maxHealth += (int)Math.Round(HealthOffset);
             Game1.player.health += (int)Math.Round(HealthOffset);
-            Game1.player.MaxStamina += (int)Math.Round(EnergyOffset);
-            Game1.player.stamina += (int)Math.Round(EnergyOffset);
+            Buff buff = new Buff(
+                id: "StrongerYou",
+                duration: 999999999,
+                effects: new BuffEffects()
+                {
+                    MaxStamina = { (int)Math.Round(EnergyOffset) },
+                }
+            );
+            buff.visible = false;
+            Game1.player.Stamina += (int)Math.Round(EnergyOffset);  
+            Game1.player.applyBuff(buff);
             Monitor.Log("Added Bonus Health and Energy based on Levels.", LogLevel.Info);
         }
 
@@ -85,7 +96,11 @@ namespace StrongerYou
             //Remove Health and Energy
             Monitor.Log("Removing Bonus Health and Energy Prior to Save...", LogLevel.Info);
             Game1.player.maxHealth -= (int)Math.Round(HealthOffset);
-            Game1.player.MaxStamina -= (int)Math.Round(EnergyOffset);
+            //Remove the Buff
+            if(Game1.player.hasBuff("StrongerYou"))
+            {
+                Game1.player.buffs.Remove("StrongerYou");
+            }
         }
     }
 
