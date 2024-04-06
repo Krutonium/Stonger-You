@@ -82,8 +82,8 @@ namespace StrongerYou
                 }
             );
             buff.visible = false;
-            Game1.player.Stamina += (int)Math.Round(EnergyOffset);  
             Game1.player.applyBuff(buff);
+            Game1.player.Stamina += (int)Math.Round(EnergyOffset);  
             Monitor.Log("Added Bonus Health and Energy based on Levels.", LogLevel.Info);
         }
 
